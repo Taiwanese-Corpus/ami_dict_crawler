@@ -30,6 +30,7 @@ class 有詞性試驗(TestCase):
             },
             {
                 "pronounce": None,
+                "pos": None,
                 "sentence": "mucing sqasa atu' mu kung.",
                 "zh_Hant": "我的區塊一直到那裡。",
                 "description": "解釋2：區、塊",

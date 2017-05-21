@@ -87,7 +87,9 @@ class Spider(scrapy.Spider):
         descriptions = [''.join(x.xpath('descendant::text()').extract())
                         for x in 這詞條.xpath('//div[@class="block"]/div[1]')]
         sentences = [''.join(x.xpath('descendant::text()').extract()).strip()
-                     for x in 這詞條.xpath('//div[@class="block"]/div[2]/table/tr[1]/td')]
+                     for x in 這詞條.xpath('//div[@class="block"]/div[2]/table/tr[@class="st"][1]/td')]
+        pos = [''.join(x.xpath('descendant::text()').extract()).strip()
+                     for x in 這詞條.xpath('//div[@class="block"]/div[2]/table/tr[1][not(@class="st")]/td')]
         pronounces = [urljoin(response.url, x.extract()) for x in 這詞條.xpath(
             '//div[@class="block"]/div[2]/table/tr[1]/td/a[@class="play"]/@rel')]
         zh_Hants = [''.join(x.xpath('text()').extract()) for x in 這詞條.xpath(
@@ -96,6 +98,7 @@ class Spider(scrapy.Spider):
             data['examples'].append({
                 'description': descriptions[i],
                 'sentence': sentences[i] if len(sentences) > i else None,
+                'pos': pos[i] if len(pos) > i and pos[i]!=sentences[i] else None,
                 'pronounce': pronounces[i] if len(pronounces) > i else None,
                 'zh_Hant': zh_Hants[i] if len(zh_Hants) > i else None
             })
