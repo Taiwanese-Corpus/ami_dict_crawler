@@ -108,6 +108,7 @@ class 掠網頁試驗(TestCase):
             request=self.要求,
         )
         self.assertIsNone(Spider().掠詞條(rr))
+
     def test_有詞性(self):
         rr = scrapy.http.TextResponse(
             'http://e-dictionary.apc.gov.tw/ais/Term.htm',
@@ -115,9 +116,23 @@ class 掠網頁試驗(TestCase):
             encoding='utf-8',
             request=self.要求,
         )
+        答案 = [
+            {
+                "pronounce": "http://e-dictionary.apc.gov.tw/MultiMedia/Audio/tay/atu'_{1}_@_1.1.mp3",
+                "pos": "詞類：名詞",
+                "sentence": "atu' qasa ga, pinyangan maku'.",
+                "zh_Hant": "那區塊是我的耕種地。",
+                "description": "解釋1：區、塊、筆",
+            },
+            {
+                "pronounce": None,
+                "sentence": "mucing sqasa atu' mu kung.",
+                "zh_Hant": "我的區塊一直到那裡。",
+                "description": "解釋2：區、塊",
+            },
+        ]
         結果 = Spider().掠詞條(rr)
-        self.assertEqual(結果['examples'], {None})
-        
+        self.assertEqual(結果['examples'], 答案)
 
     系統維護中回應 = '<div align=center>系統維護中，請稍候再試!</div>'
     正常回應 = '''
@@ -289,7 +304,7 @@ class 掠網頁試驗(TestCase):
 <div id="oGHC_TermsTreeDE" class="terms_tree"><ul id="tree"><li><a href="javascript:void(0)" class="tree_term" rel="254870">dopoh</a>　1.殷勤工作；勤奮<ul><li>　<a href="javascript:void(0)" class="tree_term" rel="257456">dopohen</a>　1.孜孜不倦；勤奮<ul></li><li>　<a href="javascript:void(0)" class="tree_term" rel="257457">madopoh</a>　1.孜孜不倦；勤奮<ul></li></ul></li></ul></div>
 <div id="oGHC_TermsTreeSer" class="terms_tree"><ul id="tree"><li><a href="javascript:void(0)" class="tree_term" rel="254870">dopoh</a>　1.殷勤工作；勤奮<ul><li>　<a href="javascript:void(0)" class="tree_term" rel="257456">dopohen</a>　1.孜孜不倦；勤奮<ul></li><li>　<a href="javascript:void(0)" class="tree_term" rel="257457">madopoh</a>　1.孜孜不倦；勤奮<ul></li></ul></li></ul></div>
 '''
-    有詞性='''
+    有詞性 = '''
     
 
 <div id="oGHC_Deatail">
