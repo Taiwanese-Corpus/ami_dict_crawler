@@ -5,7 +5,7 @@ from scrapy.selector import Selector
 from sys import stderr
 
 
-class Spider(scrapy.Spider):
+class EDictionarySpider(scrapy.Spider):
     name = "ami"
     allowed_domains = ["e-dictionary.apc.gov.tw"]
     download_delay = 0

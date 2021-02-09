@@ -30,3 +30,6 @@ pip-log.txt
 /venv/
 *.log
 *.jsonlines
+.pydevproject
+.project
+.settings/

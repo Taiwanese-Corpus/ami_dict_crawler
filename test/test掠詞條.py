@@ -1,6 +1,6 @@
 from unittest.case import TestCase
 
-from crawler import Spider
+from crawler import EDictionarySpider
 from scrapy.selector import Selector
 import scrapy
 
@@ -20,7 +20,7 @@ class 掠網頁試驗(TestCase):
             encoding='utf-8',
             request=self.要求,
         )
-        結果 = Spider().掠詞條(rr)
+        結果 = EDictionarySpider().掠詞條(rr)
         self.assertIn('examples', 結果)
         self.assertEqual(結果['name'], "a:su'")
         self.assertEqual(結果['source'], "asu'")
@@ -35,7 +35,7 @@ class 掠網頁試驗(TestCase):
             encoding='utf-8',
             request=self.要求,
         )
-        結果 = Spider().掠詞條(rr)
+        結果 = EDictionarySpider().掠詞條(rr)
         答案 = {
             "source": "ahowid",
             "pronounce": "http://e-dictionary.apc.gov.tw/MultiMedia/Audio/ami/aahowiden_{1}.mp3",
@@ -60,7 +60,7 @@ class 掠網頁試驗(TestCase):
             encoding='utf-8',
             request=self.要求,
         )
-        結果 = Spider().掠詞條(rr)
+        結果 = EDictionarySpider().掠詞條(rr)
         答案 = [
             {
                 "pronounce": None,
@@ -87,7 +87,7 @@ class 掠網頁試驗(TestCase):
             encoding='utf-8',
             request=self.要求,
         )
-        結果 = Spider().掠詞條(rr)
+        結果 = EDictionarySpider().掠詞條(rr)
         self.assertEqual(結果['source'], None)
 
     def test_無發音回應(self):
@@ -97,7 +97,7 @@ class 掠網頁試驗(TestCase):
             encoding='utf-8',
             request=self.要求,
         )
-        結果 = Spider().掠詞條(rr)
+        結果 = EDictionarySpider().掠詞條(rr)
         self.assertEqual(結果['pronounce'], None)
 
     def test_系統維護中(self):
@@ -107,7 +107,7 @@ class 掠網頁試驗(TestCase):
             encoding='utf-8',
             request=self.要求,
         )
-        self.assertIsNone(Spider().掠詞條(rr))
+        self.assertIsNone(EDictionarySpider().掠詞條(rr))
 
     系統維護中回應 = '<div align=center>系統維護中，請稍候再試!</div>'
     正常回應 = '''
