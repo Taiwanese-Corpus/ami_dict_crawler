@@ -9,7 +9,8 @@ class A(SuTiau):
 
     def test_詞條音檔(self):
         self.assertEqual(
-            self.sutiau['imtong'], '/MultiMedia/audio/trv/a_{1}.mp3',
+            self.sutiau['imtong'],
+            'https://e-dictionary.apc.gov.tw/MultiMedia/audio/trv/a_{1}.mp3',
             self.sutiau
         )
 

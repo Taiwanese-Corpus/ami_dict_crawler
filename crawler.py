@@ -50,12 +50,12 @@ class EDictionarySpider(scrapy.Spider):
         if data['sutiau'] is None:
             self.logger.warning('{} 詞條無資料'.format(sutiau))
             return
-        詞條音檔路徑 = response.xpath(
-            '//div[@id="oGHC_Term"]/a/@rel').extract_first()
+        詞條音檔路徑 = response.css(
+            'div.main_entry_word > span.volume audio').attrib['src']
         if 詞條音檔路徑:
-            data['pronounce'] = urljoin(response.url, 詞條音檔路徑)
+            data['imtong'] = urljoin(response.url, 詞條音檔路徑)
         else:
-            data['pronounce'] = None
+            data['imtong'] = None
         data['frequency'] = ''.join(
             response.xpath(
                 '//div[@id="oGHC_Freq"]/descendant::text()').extract()
