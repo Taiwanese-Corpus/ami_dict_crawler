@@ -1,105 +1,81 @@
 # -*- coding: utf-8 -*-
 from urllib.parse import urljoin
 import scrapy
-from scrapy.selector import Selector
 
 
-class Spider(scrapy.Spider):
+class EDictionarySpider(scrapy.Spider):
     name = "ami"
     allowed_domains = ["e-dictionary.apc.gov.tw"]
     download_delay = 0
-    辭典網址 = 'http://e-dictionary.apc.gov.tw/{}/Search.htm'
-    目錄網址 = 'http://e-dictionary.apc.gov.tw/{}/TermsMenu.htm'
-    詞條網址 = 'http://e-dictionary.apc.gov.tw/{}/Term.htm'
+    辭典網址 = 'https://e-dictionary.apc.gov.tw/{}/terms.htm'
 
     custom_settings = {
         'FEED_EXPORT_ENCODING': 'utf-8',
     }
 
     def __init__(self, lang='ami', ad=None, *args, **kwargs):
-        super(Spider, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.start_urls = [self.辭典網址.format(lang)]
         self.lang = lang
 
     def parse(self, response):
-        for 目錄選項 in Selector(response).xpath(
-            '//select[@id="ctl00_oCPH_Tabs_ddl_char"]/option'
+        yield from self.掠詞條(response)
+        for a in response.css(
+            'div.wordlist_select ul.picker li a'
         ):
-            字首 = 目錄選項.xpath('text()').extract_first()
-            編號 = 目錄選項.xpath('@value').extract_first()
-            meta = {
-                #                 'cookiejar': "%s_%d" % (self.lang, i),
-                '字首': 字首,
-                '目錄編號': 編號,
-            }
-            yield scrapy.FormRequest(
-                self.目錄網址.format(self.lang, 編號),
-                method='POST',
-                formdata={'tsid': 編號},
-                meta=meta, dont_filter=True,
-                callback=self.掠目錄,
-            )
-
-    def 掠目錄(self, response):
-        self.logger.debug('掠 {} 的目錄'.format(response.meta['字首']))
-        for 詞條選項 in Selector(response).xpath('//a[@class="w_term"]'):
-            詞條編號 = 詞條選項.xpath('@rel').extract_first()
-            詞條名 = 詞條選項.xpath('text()').extract_first()
-            meta = {
-                #                 'cookiejar': "%s_%d" % (self.lang, i),
-                '詞條名': 詞條名,
-            }
-            yield scrapy.FormRequest(
-                self.詞條網址.format(self.lang, 詞條編號),
-                method='POST',
-                formdata={'did': 詞條編號, 'fun': ''},
-                meta=meta, dont_filter=True,
-                callback=self.掠詞條,
-            )
+            yield response.follow(a.attrib['href'], self.parse)
+        for a in response.css(
+            'div.wordlist_scrollcontent ul.list_box li a.w_term'
+        ):
+            yield response.follow(a.attrib['href'], self.parse)
 
     def 掠詞條(self, response):
-        self.logger.debug('掠 {} 詞條'.format(response.meta['詞條名']))
-        這詞條 = Selector(response)
-        data = {'examples': []}
-        data['name'] = 這詞條.xpath(
-            '//div[@id="oGHC_Term"]/span/text()'
-        ).extract_first()
-        if data['name'] is None:
-            self.logger.warning('{} 詞條無資料'.format(response.meta['詞條名']))
-            return
-        詞條音檔路徑 = 這詞條.xpath('//div[@id="oGHC_Term"]/a/@rel').extract_first()
-        if 詞條音檔路徑:
-            data['pronounce'] = urljoin(response.url, 詞條音檔路徑)
-        else:
-            data['pronounce'] = None
-        data['frequency'] = ''.join(
-            這詞條.xpath('//div[@id="oGHC_Freq"]/descendant::text()').extract()
-        )
+        sutiau = response.css(
+            'h2.main_title span::text'
+        ).get()
+        self.logger.debug('掠 {} 詞條'.format(sutiau))
 
-        try:
-            data['source'] = (
-                這詞條
-                .xpath('//div[@id="oGHC_Source"]/a[@class="ws_term"]/text()').
-                extract_first()
-            )
-        except:
-            data['source'] = None
-        descriptions = [''.join(x.xpath('descendant::text()').extract())
-                        for x in 這詞條.xpath('//div[@class="block"]/div[1]')]
-        sentences = [''.join(x.xpath('descendant::text()').extract()).strip()
-                     for x in 這詞條.xpath('//div[@class="block"]/div[2]/table/tr[@class="st"][1]/td')]
-        pos = [''.join(x.xpath('descendant::text()').extract()).strip()
-                     for x in 這詞條.xpath('//div[@class="block"]/div[2]/table/tr[1][not(@class="st")]/td')]
-        pronounces = [urljoin(response.url, x.extract()) for x in 這詞條.xpath(
-            '//div[@class="block"]/div[2]/table/tr[1]/td/a[@class="play"]/@rel')]
-        zh_Hants = [''.join(x.xpath('text()').extract()) for x in 這詞條.xpath(
-            '//div[@class="block"]/div[2]/table/tr[2]/td')]
-        for i in range(len(descriptions)):
-            data['examples'].append({
-                'description': descriptions[i],
-                'sentence': sentences[i] if len(sentences) > i else None,
-                'pos': pos[i] if len(pos) > i and pos[i]!=sentences[i] else None,
-                'pronounce': pronounces[i] if len(pronounces) > i else None,
-                'zh_Hant': zh_Hants[i] if len(zh_Hants) > i else None
+        if sutiau is None:
+            self.logger.warning('{} 詞條無資料'.format(sutiau))
+            return
+        詞條音檔路徑 = response.css(
+            'div.main_entry_word > span.volume audio').attrib['src']
+        if 詞條音檔路徑:
+            imtong = urljoin(response.url, 詞條音檔路徑)
+        kesueh = []
+        for pit in response.css(
+            'div.main_entry_word div.defin'
+        ):
+            tuapiau = pit.css('strong')
+            sului = tuapiau.css('ul li::text').get()
+            if sului.startswith('詞類：'):
+                sului = sului[3:]
+            leku = []
+            for li in pit.css(
+                'div.row div.col-md-12 ul.exam_lst li'
+            ):
+                tsokgi_leku = ''.join(
+                    li.css('p.stc button *::text, p.stc::text').getall()
+                ).strip()
+                leku_imtong = None
+                leku_imtong_nuaui = li.css('p.stc span.volume audio')
+                if leku_imtong_nuaui:
+                    leku_imtong = leku_imtong_nuaui.attrib['src']
+                    if leku_imtong:
+                        leku_imtong = urljoin(response.url, leku_imtong)
+                leku.append({
+                    'leku': tsokgi_leku,
+                    'imtong': leku_imtong,
+                    'huagi': li.css('p.trans::text').get(),
+                })
+            kesueh.append({
+                'mia': tuapiau.css('span.num::text').get(),
+                'huagi': tuapiau.css('span.num ~ span::text').get(),
+                '詞類': sului,
+                'leku': leku,
             })
-        return data
+        yield {
+            'sutiau': sutiau,
+            'imtong': imtong,
+            'kesueh': kesueh,
+        }
