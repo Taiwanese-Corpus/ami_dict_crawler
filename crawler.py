@@ -4,6 +4,7 @@ import scrapy
 from scrapy.selector import Selector
 from sys import stderr
 
+
 class Spider(scrapy.Spider):
     name = "ami"
     allowed_domains = ["e-dictionary.apc.gov.tw"]
