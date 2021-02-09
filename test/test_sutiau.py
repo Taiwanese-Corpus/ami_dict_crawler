@@ -10,11 +10,11 @@ class SuTiau(TestCase):
     def test_tshi(self):
         kiatko = EDictionarySpider().parse(liansuann(
             'https://e-dictionary.apc.gov.tw/trv/terms/44_28269.htm')
-            )
+        )
         tsuliau = next(kiatko)
         self.assertEqual(tsuliau, {
             'sutiau': 'a'
-        })
+        }, tsuliau)
 
 
 def liansuann(url):
