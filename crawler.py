@@ -23,17 +23,11 @@ class EDictionarySpider(scrapy.Spider):
         for a in response.css(
             'div.wordlist_select ul.picker li a'
         ):
-            yield {
-                'href': a.attrib['href'],
-                'text': a.css('a::text').get(),
-            }
+            yield response.follow(a.attrib['href'], self.parse)
         for a in response.css(
             'div.wordlist_scrollcontent ul.list_box li a.w_term'
         ):
-            yield {
-                'href': a.attrib['href'],
-                'text': a.css('a::text').get(),
-            }
+            yield response.follow(a.attrib['href'], self.parse)
 
     def 掠詞條(self, response):
         sutiau = response.css(
