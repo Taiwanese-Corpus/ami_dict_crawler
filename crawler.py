@@ -11,6 +11,13 @@ class EDictionarySpider(scrapy.Spider):
 
     custom_settings = {
         'FEED_EXPORT_ENCODING': 'utf-8',
+
+        'DOWNLOAD_DELAY': 5,
+        'CONCURRENT_REQUESTS_PER_DOMAIN': 1,
+
+        'RETRY_ENABLED': True,
+        'RETRY_TIMES': 5,
+        'RETRY_HTTP_CODES': [500, 502, 503, 504, 522, 524, 408, 429, 400],
     }
 
     def __init__(self, lang='ami', ad=None, *args, **kwargs):
