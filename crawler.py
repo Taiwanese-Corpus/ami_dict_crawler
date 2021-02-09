@@ -38,9 +38,13 @@ class EDictionarySpider(scrapy.Spider):
         if sutiau is None:
             self.logger.warning('{} 詞條無資料'.format(sutiau))
             return
-        詞條音檔路徑 = response.css(
-            'div.main_entry_word > span.volume audio').attrib['src']
-        if 詞條音檔路徑:
+        try:
+            詞條音檔路徑 = response.css(
+                'div.main_entry_word > span.volume audio'
+            ).attrib['src']
+        except KeyError:
+            imtong = None
+        else:
             imtong = urljoin(response.url, 詞條音檔路徑)
         kesueh = []
         for pit in response.css(
@@ -48,8 +52,11 @@ class EDictionarySpider(scrapy.Spider):
         ):
             tuapiau = pit.css('strong')
             sului = tuapiau.css('ul li::text').get()
-            if sului.startswith('詞類：'):
-                sului = sului[3:]
+            try:
+                if sului.startswith('詞類：'):
+                    sului = sului[3:]
+            except AttributeError:
+                sului = ''
             leku = []
             for li in pit.css(
                 'div.row div.col-md-12 ul.exam_lst li'
