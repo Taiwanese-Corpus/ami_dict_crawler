@@ -1,10 +1,9 @@
-from unittest.case import TestCase
+from unittest.case import TestCase, skip
 
 from crawler import EDictionarySpider
-from scrapy.selector import Selector
 import scrapy
 
-
+@skip
 class 掠網頁試驗(TestCase):
 
     def setUp(self):
