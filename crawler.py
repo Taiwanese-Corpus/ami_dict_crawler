@@ -41,34 +41,44 @@ class EDictionarySpider(scrapy.Spider):
         sutiau = response.css(
             'h2.main_title span::text'
         ).get()
-
         self.logger.debug('掠 {} 詞條'.format(sutiau))
-        data = {
-            'sutiau': sutiau,
-            'examples': []
-        }
-        if data['sutiau'] is None:
+
+        if sutiau is None:
             self.logger.warning('{} 詞條無資料'.format(sutiau))
             return
         詞條音檔路徑 = response.css(
             'div.main_entry_word > span.volume audio').attrib['src']
         if 詞條音檔路徑:
-            data['imtong'] = urljoin(response.url, 詞條音檔路徑)
+            imtong = urljoin(response.url, 詞條音檔路徑)
         else:
-            data['imtong'] = None
-        data['frequency'] = ''.join(
-            response.xpath(
-                '//div[@id="oGHC_Freq"]/descendant::text()').extract()
-        )
-
-        try:
-            data['source'] = (
-                response
-                .xpath('//div[@id="oGHC_Source"]/a[@class="ws_term"]/text()').
-                extract_first()
-            )
-        except:
-            data['source'] = None
+            imtong = None
+#         data['frequency'] = ''.join(
+#             response.xpath(
+#                 '//div[@id="oGHC_Freq"]/descendant::text()').extract()
+#         )
+#
+#         try:
+#             data['source'] = (
+#                 response
+#                 .xpath('//div[@id="oGHC_Source"]/a[@class="ws_term"]/text()').
+#                 extract_first()
+#             )
+#         except:
+#             data['source'] = None
+        kesueh = []
+        for pit in response.css(
+            'div.main_entry_word div.defin strong'
+        ):
+            kesueh.append({
+                'mia': pit.css('span.num::text').get(),
+                'huagi': pit.css('span.num ~ span::text').get()
+            })
+        yield {
+            'sutiau': sutiau,
+            'imtong': imtong,
+            'kesueh': kesueh,
+        }
+        return
         descriptions = [''.join(x.xpath('descendant::text()').extract())
                         for x in response.xpath('//div[@class="block"]/div[1]')]
         sentences = [''.join(x.xpath('descendant::text()').extract()).strip()
