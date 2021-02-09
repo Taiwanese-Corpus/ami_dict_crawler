@@ -2,7 +2,10 @@ from test import SuTiau
 
 
 class A(SuTiau):
-    url = 'https://e-dictionary.apc.gov.tw/trv/terms/44_28269.htm'
+    url = (
+        'https://e-dictionary.apc.gov.tw'
+        '/trv/terms/44_28269.htm'
+    )
 
     def test_詞條名(self):
         self.assertEqual(self.sutiau['sutiau'], 'a', self.sutiau)
@@ -10,7 +13,10 @@ class A(SuTiau):
     def test_詞條音檔(self):
         self.assertEqual(
             self.sutiau['imtong'],
-            'https://e-dictionary.apc.gov.tw/MultiMedia/audio/trv/a_{1}.mp3',
+            (
+                'https://e-dictionary.apc.gov.tw'
+                '/MultiMedia/audio/trv/a_{1}.mp3'
+            ),
             self.sutiau
         )
 
@@ -45,7 +51,10 @@ class A(SuTiau):
     def test_leku_imtong(self):
         self.assertEqual(
             self.sutiau['kesueh'][1]['leku'][0]['imtong'],
-            'https://e-dictionary.apc.gov.tw/MultiMedia/audio/trv/a_{1}_@_2.1.mp3',
+            (
+                'https://e-dictionary.apc.gov.tw'
+                '/MultiMedia/audio/trv/a_{1}_@_2.1.mp3'
+            ),
             self.sutiau['kesueh'][1]['leku'][0],
         )
 

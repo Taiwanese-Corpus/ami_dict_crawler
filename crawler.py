@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from urllib.parse import urljoin
 import scrapy
-from scrapy.selector import Selector
-from sys import stderr
 
 
 class EDictionarySpider(scrapy.Spider):
