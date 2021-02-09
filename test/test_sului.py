@@ -1,7 +1,7 @@
 from test import SuTiau
 
 
-class O(SuTiau):
+class OSuTiau(SuTiau):
     url = (
         'https://e-dictionary.apc.gov.tw'
         '/trv/terms/m/115.htm'
