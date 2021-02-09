@@ -8,7 +8,7 @@ class O(SuTiau):
     )
 
     def test_bohunlui(self):
-        self.assertEqual(self.sutiau['sutiau'], 'o', self.sutiau)
+        self.assertEqual(self.sutiau['sutiau'], 'O', self.sutiau)
 
     def test_késueh_susing(self):
         self.assertEqual(

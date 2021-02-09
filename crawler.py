@@ -48,8 +48,11 @@ class EDictionarySpider(scrapy.Spider):
         ):
             tuapiau = pit.css('strong')
             sului = tuapiau.css('ul li::text').get()
-            if sului.startswith('詞類：'):
-                sului = sului[3:]
+            try:
+                if sului.startswith('詞類：'):
+                    sului = sului[3:]
+            except AttributeError:
+                sului = ''
             leku = []
             for li in pit.css(
                 'div.row div.col-md-12 ul.exam_lst li'
