@@ -79,18 +79,12 @@ class EDictionarySpider(scrapy.Spider):
             'kesueh': kesueh,
         }
         return
-        descriptions = [''.join(x.xpath('descendant::text()').extract())
-                        for x in response.xpath('//div[@class="block"]/div[1]')]
-        sentences = [''.join(x.xpath('descendant::text()').extract()).strip()
-                     for x in response.xpath('//div[@class="block"]/div[2]/table/tr[1]/td')]
-        pronounces = [urljoin(response.url, x.extract()) for x in response.xpath(
-            '//div[@class="block"]/div[2]/table/tr[1]/td/a[@class="play"]/@rel')]
-        zh_Hants = [''.join(x.xpath('text()').extract()) for x in response.xpath(
-            '//div[@class="block"]/div[2]/table/tr[2]/td')]
+      
         for i in range(len(descriptions)):
             data['examples'].append({
                 'description': descriptions[i],
                 'sentence': sentences[i] if len(sentences) > i else None,
+                'pos': pos[i] if len(pos) > i and pos[i]!=sentences[i] else None,
                 'pronounce': pronounces[i] if len(pronounces) > i else None,
                 'zh_Hant': zh_Hants[i] if len(zh_Hants) > i else None
             })

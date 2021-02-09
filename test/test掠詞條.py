@@ -42,6 +42,7 @@ class 掠網頁試驗(TestCase):
             "examples": [
                 {
                     "pronounce": "http://e-dictionary.apc.gov.tw/MultiMedia/Audio/ami/aahowiden_{1}_@_1.1.mp3",
+                    "pos": None,
                     "sentence": "O aahowiden no mita ko pasifana'ay a singsi.",
                     "zh_Hant": "教導我們的老師是值得我們感謝的。",
                     "description": "解釋1：值得去感謝者"
@@ -63,18 +64,24 @@ class 掠網頁試驗(TestCase):
         答案 = [
             {
                 "pronounce": None,
+                "pos": None,
                 "sentence": "O 'opo no panay kora ma'araway no mita i potal na Mayaw.",
                 "zh_Hant": "在Mayaw家的庭院我們看到的是堆積如山的稻穀。",
                 "description": "解釋1：堆集晒過的穀子"
             },
             {
                 "pronounce": None,
+                "pos": None,
                 "sentence": "'Opo han no mita ko iraay a sito.",
                 "zh_Hant": "我們把學生集合起來。",
                 "description": "解釋2：集中；集合"
             },
             {
-                "pronounce": None, "sentence": None, "zh_Hant": None, "description": "解釋3：會議"
+                "pronounce": None,
+                "pos": None,
+                "sentence": None,
+                "zh_Hant": None,
+                "description": "解釋3：會議"
             }
         ]
         self.assertEqual(結果['examples'], 答案)
