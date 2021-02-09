@@ -60,11 +60,11 @@ class A(SuTiau):
         self.assertEqual(
             self.sutiau['kesueh'][1]['leku'][1]['leku'],
             'A! Quyu wa!',
-            self.sutiau,
+            self.sutiau['kesueh'][1]['leku'][1],
         )
 
     def test_leku_boimtong(self):
         self.assertIsNone(
             self.sutiau['kesueh'][1]['leku'][1]['imtong'],
-            self.sutiau,
+            self.sutiau['kesueh'][1]['leku'][1],
         )

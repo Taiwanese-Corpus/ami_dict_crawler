@@ -70,7 +70,7 @@ class EDictionarySpider(scrapy.Spider):
                         leku_imtong = urljoin(response.url, leku_imtong)
 
                 leku.append({
-                    'leku': li.css('p.stc::text').get(),
+                    'leku': ''.join(li.css('p.stc *::text').getall()).strip(),
                     'imtong': leku_imtong,
                     'huagi': li.css('p.trans::text').get(),
                 })
