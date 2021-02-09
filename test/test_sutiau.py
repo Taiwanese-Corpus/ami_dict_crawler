@@ -39,21 +39,21 @@ class A(SuTiau):
         self.assertEqual(
             self.sutiau['kesueh'][1]['leku'][0]['leku'],
             'A! qlahang wa.',
-            self.sutiau,
+            self.sutiau['kesueh'][1]['leku'][0],
         )
 
     def test_leku_imtong(self):
         self.assertEqual(
             self.sutiau['kesueh'][1]['leku'][0]['imtong'],
             'https://e-dictionary.apc.gov.tw/MultiMedia/audio/trv/a_{1}_@_2.1.mp3',
-            self.sutiau,
+            self.sutiau['kesueh'][1]['leku'][0],
         )
 
     def test_leku_huagi(self):
         self.assertEqual(
             self.sutiau['kesueh'][1]['leku'][0]['huagi'],
             '啊!要小心。',
-            self.sutiau,
+            self.sutiau['kesueh'][1]['leku'][0],
         )
 
     def test_leku_tsokgi_boimtong(self):

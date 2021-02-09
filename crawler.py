@@ -62,15 +62,17 @@ class EDictionarySpider(scrapy.Spider):
             for li in pit.css(
                 'div.row div.col-md-12 ul.exam_lst li'
             ):
+                tsokgi_leku = ''.join(
+                    li.css('p.stc button *::text, p.stc::text').getall()
+                ).strip()
                 leku_imtong = None
                 leku_imtong_nuaui = li.css('p.stc span.volume audio')
                 if leku_imtong_nuaui:
                     leku_imtong = leku_imtong_nuaui.attrib['src']
                     if leku_imtong:
                         leku_imtong = urljoin(response.url, leku_imtong)
-
                 leku.append({
-                    'leku': ''.join(li.css('p.stc *::text').getall()).strip(),
+                    'leku': tsokgi_leku,
                     'imtong': leku_imtong,
                     'huagi': li.css('p.trans::text').get(),
                 })
