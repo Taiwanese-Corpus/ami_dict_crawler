@@ -1,0 +1,18 @@
+dist: bionic
+language: python
+python:
+- '3.8'
+env:
+  matrix:
+  - TOX_ENV=test
+  - TOX_ENV=flake8
+branches:
+  only:
+  - master
+install:
+- pip install tox
+script:
+- tox -e $TOX_ENV
+after_success:
+- coverage report
+- coveralls
