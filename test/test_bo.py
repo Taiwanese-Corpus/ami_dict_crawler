@@ -8,4 +8,5 @@ class OoPehPhah(SuTiau):
     )
 
     def test_bô詞條_所致傳連結(self):
-        self.assertNotIn('sutiau', self.sutiau, self.sutiau)
+        with self.assertRaises(TypeError):
+            self.sutiau['sutiau']
