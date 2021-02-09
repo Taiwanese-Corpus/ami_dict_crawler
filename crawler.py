@@ -38,9 +38,13 @@ class EDictionarySpider(scrapy.Spider):
         if sutiau is None:
             self.logger.warning('{} 詞條無資料'.format(sutiau))
             return
-        詞條音檔路徑 = response.css(
-            'div.main_entry_word > span.volume audio').attrib['src']
-        if 詞條音檔路徑:
+        try:
+            詞條音檔路徑 = response.css(
+                'div.main_entry_word > span.volume audio'
+            ).attrib['src']
+        except KeyError:
+            imtong = None
+        else:
             imtong = urljoin(response.url, 詞條音檔路徑)
         kesueh = []
         for pit in response.css(
