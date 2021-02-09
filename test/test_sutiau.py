@@ -16,3 +16,45 @@ class A(SuTiau):
 
     def test_késueh(self):
         self.assertEqual(len(self.sutiau['kesueh']), 4, self.sutiau)
+
+    def test_késueh_huagi(self):
+        self.assertEqual(
+            self.sutiau['kesueh'][0]['huagi'], '不信任',
+            self.sutiau
+        )
+
+    def test_késueh_susing(self):
+        self.assertEqual(
+            self.sutiau['kesueh'][0]['詞類'], '動詞、嘆詞',
+            self.sutiau
+        )
+
+    def test_késueh_leku(self):
+        self.assertEqual(
+            len(self.sutiau['kesueh'][1]['leku']), 2,
+            self.sutiau
+        )
+
+    def test_leku_tsokgi(self):
+        self.assertEqual(
+            self.sutiau['kesueh'][1]['leku'][0]['leku'],
+            'A! qlahang wa.'
+        )
+
+    def test_leku_imtong(self):
+        self.assertEqual(
+            self.sutiau['kesueh'][1]['leku'][0]['imtong'],
+            'https://e-dictionary.apc.gov.tw/MultiMedia/audio/trv/a_%7B1%7D_@_2.1.mp3'
+        )
+
+    def test_leku_huagi(self):
+        self.assertEqual(
+            self.sutiau['kesueh'][1]['leku'][0]['huagi'],
+            '啊!要小心。'
+        )
+
+    def test_leku_tsokgi_boimtong(self):
+        self.assertEqual(
+            self.sutiau['kesueh'][1]['leku'][1]['leku'],
+            'A! Quyu wa!'
+        )
