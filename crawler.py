@@ -50,42 +50,38 @@ class EDictionarySpider(scrapy.Spider):
             'div.main_entry_word > span.volume audio').attrib['src']
         if 詞條音檔路徑:
             imtong = urljoin(response.url, 詞條音檔路徑)
-        else:
-            imtong = None
-#         data['frequency'] = ''.join(
-#             response.xpath(
-#                 '//div[@id="oGHC_Freq"]/descendant::text()').extract()
-#         )
-#
-#         try:
-#             data['source'] = (
-#                 response
-#                 .xpath('//div[@id="oGHC_Source"]/a[@class="ws_term"]/text()').
-#                 extract_first()
-#             )
-#         except:
-#             data['source'] = None
         kesueh = []
         for pit in response.css(
-            'div.main_entry_word div.defin strong'
+            'div.main_entry_word div.defin'
         ):
+            tuapiau = pit.css('strong')
+            sului = tuapiau.css('ul li::text').get()
+            if sului.startswith('詞類：'):
+                sului = sului[3:]
+            leku = []
+            for li in pit.css(
+                'div.row div.col-md-12 ul.exam_lst li'
+            ):
+                leku_imtong = None
+                leku_imtong_nuaui = li.css('p.stc span.volume audio')
+                if leku_imtong_nuaui:
+                    leku_imtong = leku_imtong_nuaui.attrib['src']
+                    if leku_imtong:
+                        leku_imtong = urljoin(response.url, leku_imtong)
+
+                leku.append({
+                    'leku': li.css('p.stc::text').get(),
+                    'imtong': leku_imtong,
+                    'huagi': li.css('p.trans::text').get(),
+                })
             kesueh.append({
-                'mia': pit.css('span.num::text').get(),
-                'huagi': pit.css('span.num ~ span::text').get()
+                'mia': tuapiau.css('span.num::text').get(),
+                'huagi': tuapiau.css('span.num ~ span::text').get(),
+                '詞類': sului,
+                'leku': leku,
             })
         yield {
             'sutiau': sutiau,
             'imtong': imtong,
             'kesueh': kesueh,
         }
-        return
-      
-        for i in range(len(descriptions)):
-            data['examples'].append({
-                'description': descriptions[i],
-                'sentence': sentences[i] if len(sentences) > i else None,
-                'pos': pos[i] if len(pos) > i and pos[i]!=sentences[i] else None,
-                'pronounce': pronounces[i] if len(pronounces) > i else None,
-                'zh_Hant': zh_Hants[i] if len(zh_Hants) > i else None
-            })
-        yield data
