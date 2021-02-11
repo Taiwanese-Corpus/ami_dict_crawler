@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from time import sleep
-from urllib.parse import urljoin
 import scrapy
 
 
@@ -60,7 +59,7 @@ class EDictionarySpider(scrapy.Spider):
         except KeyError:
             imtong = None
         else:
-            imtong = urljoin(response.url, 詞條音檔路徑)
+            imtong = response.urljoin(詞條音檔路徑)
         kesueh = []
         for pit in response.css(
             'div.main_entry_word div.defin'
@@ -84,7 +83,7 @@ class EDictionarySpider(scrapy.Spider):
                 if leku_imtong_nuaui:
                     leku_imtong = leku_imtong_nuaui.attrib['src']
                     if leku_imtong:
-                        leku_imtong = urljoin(response.url, leku_imtong)
+                        leku_imtong = response.urljoin(leku_imtong)
                 leku.append({
                     'leku': tsokgi_leku,
                     'imtong': leku_imtong,
