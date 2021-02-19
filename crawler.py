@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from time import sleep
 import scrapy
 
 
@@ -12,11 +11,11 @@ class EDictionarySpider(scrapy.Spider):
     custom_settings = {
         'FEED_EXPORT_ENCODING': 'utf-8',
 
-        'AUTOTHROTTLE_TARGET_CONCURRENCY': True,
+        'AUTOTHROTTLE_ENABLED': True,
         'AUTOTHROTTLE_TARGET_CONCURRENCY': 0.1,
         'AUTOTHROTTLE_DEBUG': True,
 
-        'DOWNLOAD_DELAY': 60,
+        'DOWNLOAD_DELAY': 5,
         'CONCURRENT_REQUESTS': 1,
         'CONCURRENT_REQUESTS_PER_DOMAIN': 1,
         'CONCURRENT_REQUESTS_PER_IP': 1,
@@ -33,7 +32,6 @@ class EDictionarySpider(scrapy.Spider):
 
     def parse(self, response):
         yield from self.掠詞條(response)
-        sleep(5)
         for a in response.css(
             'div.wordlist_select ul.picker li a'
         ):
