@@ -12,7 +12,7 @@ class EDictionarySpider(scrapy.Spider):
         'FEED_EXPORT_ENCODING': 'utf-8',
 
         'AUTOTHROTTLE_ENABLED': True,
-        'AUTOTHROTTLE_TARGET_CONCURRENCY': 0.1,
+        'AUTOTHROTTLE_TARGET_CONCURRENCY': 0.5,
         'AUTOTHROTTLE_DEBUG': True,
 
         'DOWNLOAD_DELAY': 5,
